@@ -13,7 +13,7 @@ const AddCommentForm = ({ handleAddComment, handleChange, newComment }) => {
 					value={newComment}
 					placeholder="New Comment"
 				/>
-				<button className="btn btn-primary">Add</button>
+				<button className="btn btn-primary my-2">Add</button>
 			</form>
 		</>
 	);

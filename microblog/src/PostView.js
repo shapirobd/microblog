@@ -76,7 +76,7 @@ const PostView = ({
 	};
 
 	return (
-		<div className="PostView jumbotron bg-white">
+		<div className="PostView jumbotron bg-white pt-0 px-0">
 			<PostDetails
 				title={title}
 				description={description}

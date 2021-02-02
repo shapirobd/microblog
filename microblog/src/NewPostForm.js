@@ -85,7 +85,7 @@ const NewPostForm = ({ title, postId, setBeingEditted }) => {
 						value={formData.description}
 					/>
 				</div>
-				<div className="form-group form-check">
+				<div className="form-group">
 					<label htmlFor="body">Body</label>
 					<textarea
 						className="form-control"
@@ -96,7 +96,7 @@ const NewPostForm = ({ title, postId, setBeingEditted }) => {
 						value={formData.body}
 					></textarea>
 				</div>
-				<button type="submit" className="btn btn-primary">
+				<button type="submit" className="btn btn-primary mr-3">
 					Submit
 				</button>
 				<Link to="/" className="btn btn-danger">
