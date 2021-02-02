@@ -1,6 +1,10 @@
-import { v4 as uuid } from "uuid";
+const INITIAL_STATE = localStorage.getItem("state")
+	? JSON.parse(localStorage.getItem("state"))
+	: { posts: null, titles: [] };
 
-const INITIAL_STATE = { posts: {}, titles: [] };
+// localStorage.setItem("state", JSON.stringify(INITIAL_STATE));
+
+console.log(INITIAL_STATE);
 
 const rootReducer = (state = INITIAL_STATE, action) => {
 	const { posts } = state;
@@ -9,17 +13,48 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
 	switch (action.type) {
 		case "FETCH_TITLES": {
-			const { titles } = payload;
-			return { ...state, titles };
+			if (!localStorage.getItem("state")) {
+				const { titles } = payload;
+				localStorage.setItem("state", JSON.stringify({ ...state, titles }));
+				console.log({ ...state, titles });
+				return { ...state, titles };
+			} else {
+				return JSON.parse(localStorage.getItem("state"));
+			}
 		}
 
 		case "FETCH_POST": {
-			const { post } = payload;
-			return { ...state, posts: { ...state.posts, [post.id]: post } };
+			const localState = localStorage.getItem("state");
+			console.log(localState.posts);
+			if (!localState.posts) {
+				const { post } = payload;
+				if (typeof post !== "object") {
+					localStorage.setItem("state", JSON.stringify(state));
+					return state;
+				} else {
+					localStorage.setItem(
+						"state",
+						JSON.stringify({
+							...state,
+							posts: { ...state.posts, [post.id]: post },
+						})
+					);
+					return { ...state, posts: { ...state.posts, [post.id]: post } };
+				}
+			} else {
+				return JSON.parse(localStorage.getItem("state"));
+			}
 		}
 
 		case "ADD_POST": {
 			const { id, title, description, votes } = payload;
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					titles: [...titles, { id, title, description, votes }],
+					posts: { ...posts, [id]: { ...payload, comments: [] } },
+				})
+			);
 			return {
 				titles: [...titles, { id, title, description, votes }],
 				posts: { ...posts, [id]: { ...payload, comments: [] } },
@@ -37,12 +72,27 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 				posts: { ...posts },
 			};
 			delete stateCopy.posts[id];
+			localStorage.setItem("state", JSON.stringify({ ...stateCopy }));
 			return { ...stateCopy };
 		}
 
 		case "EDIT_POST": {
 			const { post } = payload;
 			const { id, title, description } = post;
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					titles: [
+						...titles.map((t) =>
+							t.id === +id ? { id, title, description } : t
+						),
+					],
+					posts: {
+						...posts,
+						[id]: { ...post, comments: posts[id].comments },
+					},
+				})
+			);
 			return {
 				titles: [
 					...titles.map((t) => (t.id === +id ? { id, title, description } : t)),
@@ -56,7 +106,19 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
 		case "ADD_COMMENT": {
 			const { comment, postId } = payload;
-			const { id } = comment;
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					...state,
+					posts: {
+						...posts,
+						[postId]: {
+							...posts[postId],
+							comments: [...posts[postId].comments, comment],
+						},
+					},
+				})
+			);
 			return {
 				...state,
 				posts: {
@@ -71,6 +133,21 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 
 		case "REMOVE_COMMENT": {
 			const { comment, postId } = payload;
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					...state,
+					posts: {
+						...posts,
+						[postId]: {
+							...posts[postId],
+							comments: posts[postId].comments.filter(
+								(c) => c.id !== comment.id
+							),
+						},
+					},
+				})
+			);
 			return {
 				...state,
 				posts: {
@@ -82,9 +159,22 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 				},
 			};
 		}
-		case "CHANGEVOTE": {
-			const { votes, postId } = payload;
 
+		case "CHANGE_VOTE": {
+			const { votes, postId } = payload;
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					...state,
+					posts: {
+						...posts,
+						[postId]: {
+							...posts[postId],
+							votes: votes,
+						},
+					},
+				})
+			);
 			return {
 				...state,
 				posts: {
@@ -96,19 +186,6 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 				},
 			};
 		}
-		// case "DOWNVOTE": {
-		// 	const { votes } = payload;
-		// 	return {
-		// 		...state,
-		// 		posts: {
-		// 			...posts,
-		// 			[postId]: {
-		// 				...posts[postId],
-		// 				votes,
-		// 			},
-		// 		},
-		// 	};
-		// }
 
 		default:
 			return state;

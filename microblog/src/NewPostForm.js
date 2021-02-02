@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { editPost } from "./actions";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { createPost, updatePost } from "./actionCreators";
+import { createPost, updatePost } from "./actionCreators/postActionCreators";
 
-const NewPostForm = ({ title, postId, setBeingEditted }) => {
+const NewPostForm = ({ header, postId, setBeingEditted }) => {
 	const posts = useSelector((state) => state.posts, shallowEqual);
 	const dispatch = useDispatch();
 	const history = useHistory();
 
 	const INITIAL_STATE =
-		title === "New Post"
+		header === "New Post"
 			? {
 					title: "",
 					description: "",
@@ -23,8 +22,6 @@ const NewPostForm = ({ title, postId, setBeingEditted }) => {
 			  };
 
 	const [formData, setFormData] = useState(INITIAL_STATE);
-	const [createFormSubmitted, setCreateFormSubmitted] = useState(false);
-	const [updateFormSubmitted, setUpdateFormSubmitted] = useState(false);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -36,32 +33,18 @@ const NewPostForm = ({ title, postId, setBeingEditted }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (title === "New Post") {
-			setCreateFormSubmitted(true);
+		if (header === "New Post") {
+			dispatch(createPost(formData));
+			history.push("/");
 		} else {
-			setUpdateFormSubmitted(true);
+			dispatch(updatePost(formData, postId));
+			setBeingEditted(false);
 		}
 	};
 
-	useEffect(() => {
-		if (createFormSubmitted) {
-			dispatch(createPost(formData));
-			setCreateFormSubmitted(false);
-			history.push("/");
-		}
-	}, [createFormSubmitted]);
-
-	useEffect(() => {
-		if (updateFormSubmitted) {
-			dispatch(updatePost(formData, postId));
-			setUpdateFormSubmitted(false);
-			history.push("/");
-		}
-	}, [updateFormSubmitted]);
-
 	return (
 		<>
-			<h1>{title}</h1>
+			<h1>{header}</h1>
 			<form onSubmit={handleSubmit}>
 				<div className="form-group">
 					<label htmlFor="title">Title</label>

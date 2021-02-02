@@ -1,4 +1,7 @@
 import React from "react";
+import { voteCount } from "./helpers/helpers";
+import { downVote, upVote } from "./actionCreators/voteActionCreators";
+import { useDispatch } from "react-redux";
 
 const PostDetails = ({
 	title,
@@ -6,15 +9,10 @@ const PostDetails = ({
 	body,
 	handleEditClick,
 	handleRemoveClick,
-	handleUpVote,
-	handleDownVote,
 	postId,
 	posts,
 }) => {
-	let votes;
-	if (posts[postId]) {
-		votes = posts[postId].votes;
-	}
+	const dispatch = useDispatch();
 
 	return (
 		<>
@@ -35,14 +33,14 @@ const PostDetails = ({
 						></button>
 					</div>
 					<div className="row">
-						<p className="col-6 m-0">{votes} votes</p>
+						<p className="col-6 m-0">{voteCount(posts[postId])} votes</p>
 						<button
 							className="col-3 border-0 bg-white fas fa-thumbs-up text-success"
-							onClick={() => handleUpVote(postId)}
+							onClick={() => dispatch(upVote(postId))}
 						></button>
 						<button
 							className="col-3 border-0 bg-white fas fa-thumbs-down text-danger"
-							onClick={() => handleDownVote(postId)}
+							onClick={() => dispatch(downVote(postId))}
 						></button>
 					</div>
 				</div>

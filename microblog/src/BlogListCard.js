@@ -1,19 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { voteCount } from "./helpers/helpers";
 
-const BlogListCard = ({
-	post,
-	postId,
-	posts,
-	handleUpVote,
-	handleDownVote,
-}) => {
+const BlogListCard = ({ post, postId, handleUpVote, handleDownVote }) => {
 	const { title, description } = post;
-
-	let votes;
-	if (posts[postId]) {
-		votes = posts[postId].votes;
-	}
 
 	return (
 		<div className="card col-3 p-0 mx-2">
@@ -27,7 +17,7 @@ const BlogListCard = ({
 			</div>
 			<div className="card-footer">
 				<div className="row">
-					<p className="col-6">{votes} votes</p>
+					<p className="col-6">{voteCount(post)} votes</p>
 					<button
 						className="col-3 border-0 bg-light fas fa-thumbs-up text-success"
 						onClick={() => handleUpVote(postId)}

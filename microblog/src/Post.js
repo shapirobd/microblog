@@ -7,9 +7,7 @@ import PostView from "./PostView";
 
 const Post = () => {
 	const posts = useSelector((state) => state.posts);
-	console.log(posts);
 	const { postId } = useParams();
-	console.log(postId);
 
 	const [newComment, setNewComment] = useState("");
 	const [beingEditted, setBeingEditted] = useState(false);

@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PostDetails from "./PostDetails";
 import PostComments from "./PostComments";
 import AddCommentForm from "./AddCommentForm";
-import { removePost, addComment, removeComment } from "./actions";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { deletePost } from "./actionCreators/postActionCreators";
 import {
-	deletePost,
 	createComment,
 	deleteComment,
-	downVote,
-	upVote,
-} from "./actionCreators";
+} from "./actionCreators/commentActionCreators";
 
 const PostView = ({
 	posts,
@@ -20,11 +17,7 @@ const PostView = ({
 	setNewComment,
 	setBeingEditted,
 }) => {
-	console.log(posts);
-	console.log(postId);
 	const { title, description, body } = posts[postId];
-	const [commentEntered, setCommentEntered] = useState(false);
-	const [commentBeingDeleted, setCommentBeingDeleted] = useState(null);
 	const dispatch = useDispatch();
 	const history = useHistory();
 
@@ -35,28 +28,13 @@ const PostView = ({
 
 	const handleAddComment = (e) => {
 		e.preventDefault();
-		setCommentEntered(true);
+		dispatch(createComment(newComment, postId));
+		setNewComment("");
 	};
-
-	useEffect(() => {
-		if (commentEntered) {
-			dispatch(createComment(newComment, postId));
-			setCommentEntered(false);
-		} else {
-			setNewComment("");
-		}
-	}, [commentEntered]);
 
 	const handleRemoveComment = (comment) => {
-		setCommentBeingDeleted(comment);
+		dispatch(deleteComment(comment, postId));
 	};
-
-	useEffect(() => {
-		if (commentBeingDeleted) {
-			dispatch(deleteComment(commentBeingDeleted, postId));
-			setCommentBeingDeleted(null);
-		}
-	}, [commentBeingDeleted]);
 
 	const handleEditClick = () => {
 		setBeingEditted(true);
@@ -67,14 +45,6 @@ const PostView = ({
 		history.push("/");
 	};
 
-	const handleUpVote = (id) => {
-		dispatch(upVote(id));
-	};
-
-	const handleDownVote = (id) => {
-		dispatch(downVote(id));
-	};
-
 	return (
 		<div className="PostView jumbotron bg-white pt-0 px-0">
 			<PostDetails
@@ -83,8 +53,6 @@ const PostView = ({
 				body={body}
 				handleEditClick={handleEditClick}
 				handleRemoveClick={handleRemoveClick}
-				handleUpVote={handleUpVote}
-				handleDownVote={handleDownVote}
 				postId={postId}
 				posts={posts}
 			/>

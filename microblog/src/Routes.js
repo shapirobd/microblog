@@ -11,7 +11,7 @@ const Routes = () => {
 				<Home />
 			</Route>
 			<Route exact path="/new">
-				<NewPostForm title="New Post" />
+				<NewPostForm header="New Post" />
 			</Route>
 			<Route path="/:postId">
 				<Post />
