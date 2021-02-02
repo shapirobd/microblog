@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "./Home";
 import NewPostForm from "./NewPostForm";
 import Post from "./Post";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 const Routes = () => {
 	return (
@@ -15,6 +15,9 @@ const Routes = () => {
 			</Route>
 			<Route path="/:postId">
 				<Post />
+			</Route>
+			<Route>
+				<Redirect to="/" />
 			</Route>
 		</Switch>
 	);

@@ -9,7 +9,6 @@ const Home = () => {
 
 	useEffect(() => {
 		if (!localStorage.getItem("state")) {
-			console.log("FETCH TITLES");
 			dispatch(fetchTitles());
 		}
 	}, [dispatch]);
@@ -19,7 +18,6 @@ const Home = () => {
 	useEffect(() => {
 		const localState = localStorage.getItem("state");
 		if (localState && !localState.posts) {
-			console.log("1");
 			titles.map((title) => dispatch(fetchPost(title.id)));
 		}
 	}, [dispatch, titles]);

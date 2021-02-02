@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import NewPostForm from "./NewPostForm";
 
 import { useSelector } from "react-redux";
@@ -11,6 +11,10 @@ const Post = () => {
 
 	const [newComment, setNewComment] = useState("");
 	const [beingEditted, setBeingEditted] = useState(false);
+
+	if (!posts[postId]) {
+		return <Redirect to="/" />;
+	}
 
 	return (
 		<>

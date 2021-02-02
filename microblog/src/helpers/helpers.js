@@ -6,7 +6,6 @@ export const voteCount = (post) => {
 
 export const orderedPosts = (posts) => {
 	if (posts) {
-		console.log(posts);
 		const postsArr = Object.values(posts);
 		const postsArrCopy = [...postsArr];
 		const orderedPostsArr = [];
@@ -33,4 +32,18 @@ const findMaxPost = (postsArrCopy) => {
 		}
 	});
 	return { maxPost, maxPostIdx };
+};
+
+export const determineColor = (votes) => {
+	let color = "white";
+	if (votes > 0 && votes <= 5) {
+		color = "rgb(175, 255, 175)";
+	} else if (votes < 0 && votes >= -5) {
+		color = "rgb(255, 175, 175)";
+	} else if (votes < -5) {
+		color = "rgb(255, 75, 75)";
+	} else if (votes > 5) {
+		color = "rgb(75, 255, 75)";
+	}
+	return color;
 };
