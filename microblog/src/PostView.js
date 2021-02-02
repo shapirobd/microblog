@@ -5,7 +5,13 @@ import AddCommentForm from "./AddCommentForm";
 import { removePost, addComment, removeComment } from "./actions";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deletePost, createComment, deleteComment } from "./actionCreators";
+import {
+	deletePost,
+	createComment,
+	deleteComment,
+	downVote,
+	upVote,
+} from "./actionCreators";
 
 const PostView = ({
 	posts,
@@ -61,6 +67,14 @@ const PostView = ({
 		history.push("/");
 	};
 
+	const handleUpVote = (id) => {
+		dispatch(upVote(id));
+	};
+
+	const handleDownVote = (id) => {
+		dispatch(downVote(id));
+	};
+
 	return (
 		<div className="PostView jumbotron bg-white">
 			<PostDetails
@@ -69,6 +83,10 @@ const PostView = ({
 				body={body}
 				handleEditClick={handleEditClick}
 				handleRemoveClick={handleRemoveClick}
+				handleUpVote={handleUpVote}
+				handleDownVote={handleDownVote}
+				postId={postId}
+				posts={posts}
 			/>
 			<hr className="my-4"></hr>
 			<PostComments

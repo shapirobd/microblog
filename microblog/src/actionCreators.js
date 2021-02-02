@@ -144,3 +144,43 @@ const deletedComment = (comment, postId) => {
 		payload: { comment, postId },
 	};
 };
+
+export const upVote = (postId) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				`${API_URL}/api/posts/${postId}/vote/up`
+			);
+			dispatch(voted(data, postId));
+		} catch (e) {
+			console.log(e);
+		}
+	};
+};
+
+export const downVote = (postId) => {
+	return async (dispatch) => {
+		try {
+			const { data } = await axios.post(
+				`${API_URL}/api/posts/${postId}/vote/down`
+			);
+			dispatch(voted(data, postId));
+		} catch (e) {
+			console.log(e);
+		}
+	};
+};
+
+const voted = (data, postId) => {
+	return {
+		type: "CHANGEVOTE",
+		payload: { ...data, postId },
+	};
+};
+
+// const downVoted = (data) => {
+// 	return {
+// 		type: "CHANGEVOTE",
+// 		payload: { ...data },
+// 	};
+// };

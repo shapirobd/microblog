@@ -82,6 +82,33 @@ const rootReducer = (state = INITIAL_STATE, action) => {
 				},
 			};
 		}
+		case "CHANGEVOTE": {
+			const { votes, postId } = payload;
+
+			return {
+				...state,
+				posts: {
+					...posts,
+					[postId]: {
+						...posts[postId],
+						votes: votes,
+					},
+				},
+			};
+		}
+		// case "DOWNVOTE": {
+		// 	const { votes } = payload;
+		// 	return {
+		// 		...state,
+		// 		posts: {
+		// 			...posts,
+		// 			[postId]: {
+		// 				...posts[postId],
+		// 				votes,
+		// 			},
+		// 		},
+		// 	};
+		// }
 
 		default:
 			return state;
